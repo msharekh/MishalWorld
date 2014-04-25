@@ -13,12 +13,20 @@ and open the template in the editor.
     </head>
     <body>
         <div>TODO write content</div>
+        <div id="myDiv">My name is Mishal </div>
      
+  
+          <button onclick="changeColor('blue');">blue</button>
+          <button onclick="changeColor('red');">red</button>
         <script>
-
+                function changeColor(newColor) {
+                     var elem = document.getElementById("myDiv");
+                elem.style.color = newColor;
+                  }
             $(document).ready(function() {
                 //alert('hello');
                 document.write('My name is Mishal Al-Sharekh');
+               
             });
         </script>
     </body>
