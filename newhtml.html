@@ -5,27 +5,120 @@ To change this template file, choose Tools | Templates
 and open the template in the editor.
 -->
 <html>
-    <head>
-        <title>TODO supply a title</title>
-        <meta charset="windows-1256">
-        <meta name="viewport" content="width=device-width">
-        <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
-    </head>
-    <body>
-        <div>TODO write content</div>
-        <div id="myDiv">My name is Mishal </div>
-     
-  
-          <button onclick="changeColor('blue');">blue</button>
-          <button onclick="changeColor('red');">red</button>
-        <script>
-                function changeColor(newColor) {
-                     var elem = document.getElementById("myDiv");
-                elem.style.color = newColor;
-                  }
-            // $(document).ready(function() {                 
-             //   document.write('My name is Mishal Al-Sharekh');             
-            //}); 
-        </script>
-    </body>
+<head>
+    <title>TODO supply a title</title>
+    <meta charset="windows-1256">
+    <meta name="viewport" content="width=device-width">
+    <style>
+        body {
+        direction:rtl;
+
+        }
+        #sel {
+            width: 200px;
+            background-color: #b7d3c2;
+            text-align: center;
+            
+        }
+
+        .hiddenSel {
+            width: 200px;
+            /*border:1px solid #ff0000;*/
+            background-color: #b7d3c2;
+            z-index: 10;
+            position: absolute;
+        }
+
+        #selecls {
+            width: 200px;
+            text-align: center;
+            background-color: #eadede;
+            color: red;
+             
+        }
+        
+    </style>
+    <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+</head>
+<body>
+ 
+    <div id="myDiv">My name is Mishal </div>
+   
+    الوظائف متوفرة في المناطق التالية:
+    <div id="sel" onclick="showSelection();">اختر مدينة</div>
+    <div class="hiddenSel">
+        <select id="selecls" onchange="showSelection();">
+            <option value="الخبر">الخبر</option>
+            <option value="الدمام">الدمام</option>
+            <option value="الجبيل">الجبيل</option>
+        </select>
+    </div>
+    <div id="result"> </div>
+    <!--<button onclick="changeColor('blue');">blue</button>
+    <button onclick="changeColor('red');">red</button>-->
+    <script>
+         
+        function showSelection() {
+            var slctt = document.getElementById("selecls");
+            slctt.size = slctt.options.length; if (slctt.options.length > 1) slctt.style.width = '200px';
+            var e = document.getElementById("selecls");
+            var valx = e.options[e.selectedIndex].value;
+            document.getElementById("sel").innerHTML = valx;
+            $(".hiddenSel").slideToggle(200);
+        }
+
+        function changeColor(newColor) {
+            var elem = document.getElementById("myDiv");
+            elem.style.color = newColor;
+        }
+        $(document).ready(function () {
+            //document.write('My name is Mishal Al-Sharekh');
+            $(".hiddenSel").hide();
+        });
+
+
+        function ajaxRequest() {
+            var activexmodes = ["Msxml2.XMLHTTP", "Microsoft.XMLHTTP"] //activeX versions to check for in IE
+            if (window.ActiveXObject) { //Test for support for ActiveXObject in IE first (as XMLHttpRequest in IE7 is broken)
+                for (var i = 0; i < activexmodes.length; i++) {
+                    try {
+                        return new ActiveXObject(activexmodes[i])
+                    }
+                    catch (e) {
+                        //suppress error
+                    }
+                }
+            }
+            else if (window.XMLHttpRequest) // if Mozilla, Safari etc
+                return new XMLHttpRequest()
+            else
+                return false
+        }
+
+        var mygetrequest = new ajaxRequest()
+        mygetrequest.onreadystatechange = function () {
+            if (mygetrequest.readyState == 4) {
+                if (mygetrequest.status == 200 || window.location.href.indexOf("http") == -1) {
+                    var jsondata = eval("(" + mygetrequest.responseText + ")") //retrieve result as an JavaScript object
+                    var rssentries = jsondata.items
+                    var output = '<ul>'
+                    for (var i = 0; i < rssentries.length; i++) {
+                        output += '<li>'
+                        output += '<a href="' + rssentries[i].link + '">'
+                        output += rssentries[i].title + '</a>'
+                        output += '</li>'
+                    }
+                    output += '</ul>'
+                    document.getElementById("result").innerHTML = output
+                }
+                else {
+                    alert("An error has occured making the request")
+                }
+            }
+        }
+
+        mygetrequest.open("GET", "javascriptkit.json", true)
+        mygetrequest.send(null)
+    </script>
+</body>
 </html>
